@@ -65,6 +65,24 @@ def SVC_classification():
 
     return best_model
 
+#Random forest
+def random_forest():
+    param_grid = [
+        {"n_estimators": [200, 500]},
+        {"max_features": ['auto', 'sqrt', 'log2']},
+        {"max_depth": [4,5,6,7,8]},
+        {"criterion":['gini', 'entropy']}
+    ]
+
+    best_model = GridSearchCV(SVC(), param_grid)
+    best_model.fit(X_train_val, y_train_val) 
+
+    print("\n\nBest model with best parameters on test set: ",
+          accuracy_score(y_test, best_model.predict(X_test)))
+    print("Best parameters of best model: ",best_model.best_params_)
+
+    return best_model
+
 #Classify samples on test_to_submit.csv
 #test_to_submit = pd.read_csv("dataset/test/test_to_submit.csv")
 #predictions = best_model.predict(test_to_submit)
