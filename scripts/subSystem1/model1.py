@@ -74,7 +74,7 @@ def random_forest():
         {"criterion":['gini', 'entropy']}
     ]
 
-    best_model = GridSearchCV(SVC(), param_grid)
+    best_model = GridSearchCV(RandomForestClassifier(), param_grid)
     best_model.fit(X_train_val, y_train_val) 
 
     print("\n\nBest model with best parameters on test set: ",
@@ -82,6 +82,9 @@ def random_forest():
     print("Best parameters of best model: ",best_model.best_params_)
 
     return best_model
+
+
+
 
 #Classify samples on test_to_submit.csv
 #test_to_submit = pd.read_csv("dataset/test/test_to_submit.csv")
