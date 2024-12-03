@@ -36,7 +36,7 @@ print("\nSplit of the data: ", len(X_train), len(X_val),len(X_test), "\n")
 def KN_classifier():
     #Hyperparameter search/tuning using the training and validation set
     param_grid = {
-    'n_neighbors': [3, 5, 7, 10, 13, 16, 19, 22, 25],
+    'n_neighbors': [i for i in range(20)],
     'weights': ['uniform', 'distance'],
     'algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute']
     }
@@ -53,7 +53,7 @@ def KN_classifier():
 #SVC classification
 def SVC_classification():
     param_grid = [
-        {"kernel": ["poly"], "degree": [3, 15, 25, 50]},
+        {"kernel": ["poly"], "degree": [i for i in range(50)]},
         {"kernel": ["rbf", "linear", "sigmoid"]}
     ]
     best_model = GridSearchCV(SVC(), param_grid)
@@ -83,8 +83,51 @@ def random_forest():
 
     return best_model
 
+#Decision tree
+def decision_tree():
+    param_grid = [
+        {'criterion':['gini','entropy']},
+        {'max_depth':[4,5,6,7,8,9,10,11,12,15,20,30,40,50,70,90,120,150]}
+    ]
 
+    best_model = GridSearchCV(DecisionTreeClassifier(), param_grid)
+    best_model.fit(X_train_val, y_train_val) 
 
+    print("\n\nBest model with best parameters on test set: ",
+          accuracy_score(y_test, best_model.predict(X_test)))
+    print("Best parameters of best model: ",best_model.best_params_)
+
+    return best_model
+
+#Logistic regression
+def logistic_regression():
+    param_grid = [
+            {'penalty':['l1','l2']}, 
+            {'C':[1, 10, 100, 1000]}
+            ]
+    best_model = GridSearchCV(LogisticRegression(), param_grid)
+    best_model.fit(X_train_val, y_train_val) 
+
+    print("\n\nBest model with best parameters on test set: ",
+          accuracy_score(y_test, best_model.predict(X_test)))
+    print("Best parameters of best model: ",best_model.best_params_)
+
+    return best_model
+
+def gradient_boosting():
+    param_grid = [
+        {"max_depth":[3,5,8]},
+        {"max_features":["log2","sqrt"]},
+        {"subsample":[0.5, 0.618, 0.8, 0.85, 0.9, 0.95, 1.0]}
+    ]
+    best_model = GridSearchCV(GradientBoostingClassifier(), param_grid)
+    best_model.fit(X_train_val, y_train_val) 
+
+    print("\n\nBest model with best parameters on test set: ",
+          accuracy_score(y_test, best_model.predict(X_test)))
+    print("Best parameters of best model: ",best_model.best_params_)
+
+    return best_model
 
 #Classify samples on test_to_submit.csv
 #test_to_submit = pd.read_csv("dataset/test/test_to_submit.csv")
