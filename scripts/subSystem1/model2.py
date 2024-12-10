@@ -6,10 +6,12 @@ import torch
 
 #Neural network class
 class Neural_Network(nn.Module):
-    def __init__(self, features_in=21, features_out=7): #21 different AU and 7 different emotions
+    def __init__(self, features_in=20, features_out=7): #21 different AU and 7 different emotions
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(features_in, 512),
+            nn.Linear(features_in, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, 512),
             nn.ReLU(),
             nn.Linear(512, 256),
             nn.ReLU(),
@@ -35,12 +37,12 @@ class EmotionDataset(Dataset):
         data = pd.read_csv(data_path)
         
         #Drop emotions from data
-        self.inputs = torch.tensor(data.drop("emotion", axis=1).to_numpy(dtype=np.float32))
+        self.inputs = torch.tensor(data.drop(["subDirectory_filePath", "expression", "valence", "arousal"], axis=1).to_numpy(dtype=np.float32))
         
         #emotions become numerical values
-        self.index2label = [label for label in data["emotion"].unique()]
+        self.index2label = [label for label in data["expression"].unique()]
         label2index = {label: i for i, label in enumerate(self.index2label)}
-        self.labels = torch.tensor(data["emotion"].apply(lambda x: label2index[x]).to_numpy())
+        self.labels = torch.tensor(data["expression"].apply(lambda x: label2index[x]).to_numpy())
 
     def __getitem__(self, index):
         return self.inputs[index], self.labels[index]
@@ -50,7 +52,7 @@ class EmotionDataset(Dataset):
 
 # Run training, validation and test
 def main():
-    dataset = EmotionDataset("dataset/test/dataset.csv")
+    dataset = EmotionDataset("processed/facial_features_cropped.csv")
     
     # Split data: 70% for training, 20% for validation, 10% for testing
     generator = torch.Generator().manual_seed(2023)
@@ -63,7 +65,7 @@ def main():
     
     # Create our model
     model = Neural_Network(train[0][0].shape[0], len(dataset.index2label))
-    optim = torch.optim.Adam(model.parameters(), lr=0.005)  # Adam optimizer, learning rate 0.005
+    optim = torch.optim.Adam(model.parameters(), lr=0.001)  # Adam optimizer, learning rate 0.005
     loss_fn = nn.CrossEntropyLoss()
     
     # Check if GPU is available, otherwise use CPU
@@ -72,7 +74,7 @@ def main():
     model = model.to(device)
     
     # Training loop
-    for epoch in range(30):
+    for epoch in range(50):
         model.train()
         for inputs, labels in train_loader:
             inputs, labels = inputs.to(device), labels.to(device)
