@@ -14,7 +14,7 @@ import joblib
 #Read and Preprocess the dataset 
 df = pd.read_csv("processed/facial_features_original.csv")
 emotion = df["expression"]
-inputs = df.drop(["subDirectory_filePath", "expression", "valence", "arousal"], axis=1)
+inputs = df.drop(["subDirectory_filePath", "expression"], axis=1)
 
 #Do a balanced split of the dataset for train/val/test: We decided to split into 70/20/10:
 

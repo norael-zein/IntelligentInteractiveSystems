@@ -3,10 +3,12 @@ import pandas as pd
 from torch import nn
 from torch.utils.data import Dataset, DataLoader, random_split
 import torch
+import joblib
+
 
 #Neural network class
 class Neural_Network(nn.Module):
-    def __init__(self, features_in=22, features_out=7):  # 22 different AU and 7 different emotions
+    def __init__(self, features_in=22, features_out=7):  #22 different AU+valence and arousal and 7 different emotions
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(features_in, 1024),
@@ -85,6 +87,7 @@ def main():
     patience = 5  #Number of epochs to wait for improvement
     patience_counter = 0
     best_model_wts = model.state_dict()  #Save the best model
+    best_epoch = -1  #Track the epoch where the best model occurred
     
     #Training loop
     for epoch in range(50):
@@ -112,14 +115,16 @@ def main():
                 val_loss += loss_fn(predictions, labels).item() 
                 correct_val += (predictions.softmax(dim=1).argmax(dim=1) == labels).sum()
 
-            val_loss /= len(val_loader)  
+            val_loss /= len(val)  #DOUBLE CHECK IF THIS SHOULD BE DIVIDED BY ONE BATCH OR WHOLE DATASET
             val_accuracy = correct_val / len(val)
             print(f"Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy * 100:.2f}%")
             
             #Early stopping check
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
+                best_val_accuracy = val_accuracy
                 best_model_wts = model.state_dict()  #Save the best model
+                best_epoch = epoch + 1  #Save the best epoch
                 patience_counter = 0  #Reset counter
             else:
                 patience_counter += 1
@@ -138,8 +143,12 @@ def main():
             test_accuracy = correct_test / len(test)
             print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
         
-        if patience_counter >= patience:
-            break  #Stop training early if patience is exhausted
+    #Save the best model at the end of training
+    model.load_state_dict(best_model_wts) 
+    joblib.dump(model.state_dict(), "scripts/subSystem1/best_model_neural_network.pkl")
+    print(f"Best model had a validation loss of: {best_val_loss:.2f} and est validation accuracy is {best_val_accuracy * 100:.2f}%")
+    print(f"Best epoch: {best_epoch}")
+
 
 if __name__ == "__main__":
     main()
