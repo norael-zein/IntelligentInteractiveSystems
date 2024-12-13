@@ -6,7 +6,7 @@
 from furhat_remote_api import FurhatRemoteAPI
 import google.generativeai as genai
 import os
-
+from ..subSystem1.best_model import bestModel
 def main():
     
     #furhat
