@@ -2,23 +2,21 @@
  has good info about mindfulness generally as well as a free seated practice
  which would be a good rubric to start with.
 """
+
 #imports
 from furhat_remote_api import FurhatRemoteAPI
 import google.generativeai as genai
 import os
 import sys
 
-from scripts.subSystem1.best_model import *
+sys.path.insert(0, '/home/pccady/Studies/IIS/projekt/IntelligentInteractiveSystems/scripts')
+sys.path.insert(0, '/home/pccady/Studies/IIS/projekt/IntelligentInteractiveSystems/scripts/subSystem1')
 
+from subSystem1.best_model import *
 import pandas as pd
 
 def main():
-    print("import?")
-    quit()
     
-    #play zone
-    #cats()
-    #quit()
     model = best_model()
     print(2)
     quit()
