@@ -9,6 +9,10 @@ TEMP_IMAGE_PATH = "temp_frame.jpg"
 class FeatureExtractor:
 
     def __init__(self):
+        """
+        Raises an exception if the webcam can't be opened
+        """
+
         self.detector = Detector(device='cuda' if torch.cuda.is_available() else 'cpu')
         self.cap = cv2.VideoCapture(0)
 
@@ -16,6 +20,10 @@ class FeatureExtractor:
             raise Exception("Error (FeatureExtraction): Could not open webcam")
 
     def extract_action_units(self):
+        """
+        Returns the AUs found in the image as a pandas data frame
+        Returns None if no face is detected or an error occurs
+        """
 
         ret, frame = self.cap.read()
 
@@ -30,8 +38,8 @@ class FeatureExtractor:
 
         try:
             features = self.detector.detect_image([TEMP_IMAGE_PATH])
-            if not features.empty:
-                return features
+            if not features.aus.empty:
+                return features.aus
             else:
                 print("Error (FeatureExtraction): No face detected")
                 return None
@@ -40,6 +48,10 @@ class FeatureExtractor:
             return None
 
     def clean_up(self):
+        """
+        Call this function before program termination
+        to ensure that the webcam is released and temp files are removed
+        """
 
         self.cap.release()
 
