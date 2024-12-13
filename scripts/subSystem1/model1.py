@@ -37,7 +37,7 @@ print("\nSplit of the data: ", len(X_train), len(X_val),len(X_test), "\n")
 
 #Our different models and configurations that will be tested
 models_and_params = [
-    ("KNN", KNeighborsClassifier(), {
+    ("KNeighborsClassifier", KNeighborsClassifier(), {
         "n_neighbors": [15,19,20,21,22,23,24],
         "weights": ["uniform", "distance"],
         "algorithm": ["auto", "ball_tree", "kd_tree", "brute"]
@@ -48,22 +48,22 @@ models_and_params = [
         "degree": [1,5,10,15],
         "gamma": ["scale", "auto"]
     }),
-    ("Random Forest", RandomForestClassifier(), {
+    ("RandomForestClassifier", RandomForestClassifier(), {
         "n_estimators": [50,100,150,200],
         "max_features": ["sqrt", "log2"],
         "max_depth": [4, 5, 6, 7, 8],
         "criterion": ["gini", "entropy"],
     }),
-    ("Decision Tree", DecisionTreeClassifier(), {
+    ("DecisionTreeClassifier", DecisionTreeClassifier(), {
         "criterion": ["gini", "entropy"],
         "max_depth": [1,2,3,4,5,6,7,8,10],
     }),
-    ("Logistic Regression", LogisticRegression(), {
+    ("LogisticRegression", LogisticRegression(), {
         "penalty": ["l1", "l2"],
         "C": [1,2,3,4,5,6,7,8,10],
         "solver": ["liblinear"]
     }),
-    ("Gradient Boosting", GradientBoostingClassifier(), {
+    ("GradientBoostingClassifier", GradientBoostingClassifier(), {
         "max_depth": [5,10,20,25],
         "max_features": ["log2", "sqrt"],
     })
