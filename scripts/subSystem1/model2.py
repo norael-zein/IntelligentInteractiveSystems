@@ -133,14 +133,12 @@ def main():
                     model.load_state_dict(best_model_wts)  #Load the best model
                     break
   
-
-
     #Test after last epoch and for the epoch corresponding to the best epoch  - how do I take the test accuracy on the best model?
     with torch.no_grad():
         correct_test = 0
         for inputs, labels in test_loader:
             inputs, labels = inputs.to(device), labels.to(device)
-            predictions = best_model_wts(inputs)
+            predictions = model(inputs)
             correct_test += (predictions.softmax(dim=1).argmax(dim=1) == labels).sum()
         test_accuracy = correct_test / len(test)
         print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
