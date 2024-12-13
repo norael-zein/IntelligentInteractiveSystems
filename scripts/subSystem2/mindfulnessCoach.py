@@ -6,8 +6,22 @@
 from furhat_remote_api import FurhatRemoteAPI
 import google.generativeai as genai
 import os
-from ..subSystem1.best_model import bestModel
+import sys
+
+from scripts.subSystem1.best_model import *
+
+import pandas as pd
+
 def main():
+    print("import?")
+    quit()
+    
+    #play zone
+    #cats()
+    #quit()
+    model = best_model()
+    print(2)
+    quit()
     
     #furhat
     furhat = FurhatRemoteAPI("localhost")
@@ -21,13 +35,13 @@ def main():
     response = model.generate_content("Explain how AI works")
     
     print(response.text)
+    while True:
+        #State progressions always start with introduction and preparation.
+        request = introduction(furhat)
     
-    #State progressions always start with introduction and preparation.
-    request = introduction()
-    
-    #seated practice
-    if request == "seated practice":
-        seated_practice()
+        #seated practice
+        if request == "seated practice":
+            seated_practice()
     
     #birb. maybe make gemini make chicken noises, idk.
     return "birb"
@@ -42,12 +56,39 @@ def seated_practice():
     reflection()
     
     end_state()
+    
+def wait_response(furhat):
+    """
+    
+    Args:
+        furhat (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+
+    while True:
+        response = furhat.listen().message
+        if response != "": return response
+        
+    
+    
+def get_emotion():
+    """
+    get model output prediction from current 
+    """
+    pass
+    
+    
+def get_facialfeatures():
+    pass
 
 def introduction():
     """
     
     """
     pass
+    
 
 def breathing():
     pass
