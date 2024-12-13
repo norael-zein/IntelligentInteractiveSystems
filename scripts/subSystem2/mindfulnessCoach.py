@@ -5,13 +5,22 @@
 
 #imports
 from furhat_remote_api import FurhatRemoteAPI
+from furhat_remote_api import Gesture
 import google.generativeai as genai
 import os
 import sys
 
-sys.path.insert(0, '/home/pccady/Studies/IIS/projekt/IntelligentInteractiveSystems/scripts')
-sys.path.insert(0, '/home/pccady/Studies/IIS/projekt/IntelligentInteractiveSystems/scripts/subSystem1')
-
+# machine agnostic way of adding project folders to sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__),"..")) #scripts
+system1 = project_root + "/subSystem1"
+system2 = project_root + "/subSystem2"
+if project_root not in sys.path:
+    sys.path.append(project_root)
+if system1 not in sys.path:
+    sys.path.append(system1)
+if system2 not in sys.path:
+    sys.path.append(system2)
+    
 from subSystem1.best_model import *
 import pandas as pd
 
