@@ -147,13 +147,20 @@ def main():
             predictions = model(inputs)
             correct_test += (predictions.softmax(dim=1).argmax(dim=1) == labels).sum()
         test_accuracy = correct_test / len(test)
+        print(test_accuracy)
 
     
     #Save the best model at the end of training
     model.load_state_dict(best_model_wts) 
-    joblib.dump(model.state_dict(), "scripts/subSystem1/best_model_neural_network.pkl")
-    print(f"Best model had a validation loss of: {best_val_loss:.2f},validation accuracy of {best_val_accuracy * 100:.2f}% and test accuracy of {test_accuracy * 100:.2f}%")
-    print(f"Best epoch: {best_epoch}")
+    #Save the best model and configurations (hyperparameters) using joblib
+    model_info = {
+        "model": model,
+        "best_weights": best_model_wts,
+        "best_val_loss": best_val_loss,
+        "best_val_accuracy": best_val_accuracy,
+    }    
+    joblib.dump(model_info, "scripts/subSystem1/best_nn_model.pkl")
+    print(model_info)
 
 
 if __name__ == "__main__":

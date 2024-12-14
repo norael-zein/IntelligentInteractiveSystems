@@ -11,4 +11,3 @@ def best_model():
     except ValueError:
         print("No image detected")
         return None
-
