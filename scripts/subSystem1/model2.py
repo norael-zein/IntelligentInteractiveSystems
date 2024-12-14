@@ -46,7 +46,7 @@ class EmotionDataset(Dataset):
         data = pd.read_csv(data_path)
         
         #Drop emotions from data
-        self.inputs = torch.tensor(data.drop(["subDirectory_filePath", "expression"], axis=1).to_numpy(dtype=np.float32))
+        self.inputs = torch.tensor(data.drop(["subDirectory_filePath", "expression", "arousal", "valence"], axis=1).to_numpy(dtype=np.float32))
         
         #Emotions become numerical values
         self.index2label = [label for label in data["expression"].unique()]
@@ -132,17 +132,14 @@ def main():
                     print("Early stopping triggered.")
                     model.load_state_dict(best_model_wts)  #Load the best model
                     break
-                #Test after last epoch and for the epoch corresponding to the best epoch  - how do I take the test accuracy on the best model?
-            with torch.no_grad():
-                correct_test = 0
-                for inputs, labels in test_loader:
-                    inputs, labels = inputs.to(device), labels.to(device)
-                    predictions = model(inputs)
-                    correct_test += (predictions.softmax(dim=1).argmax(dim=1) == labels).sum()
-                test_accuracy = correct_test / len(test)
-                print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
 
-    #Test after last epoch and for the epoch corresponding to the best epoch  - how do I take the test accuracy on the best model?
+
+    #Load the best model for final evaluation
+    model.load_state_dict(best_model_wts)
+    
+    #Evaluate the test accuracy on the best model
+    model.eval()
+    correct_test = 0
     with torch.no_grad():
         correct_test = 0
         for inputs, labels in test_loader:
@@ -150,12 +147,12 @@ def main():
             predictions = model(inputs)
             correct_test += (predictions.softmax(dim=1).argmax(dim=1) == labels).sum()
         test_accuracy = correct_test / len(test)
-        print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
-        
+
+    
     #Save the best model at the end of training
     model.load_state_dict(best_model_wts) 
     joblib.dump(model.state_dict(), "scripts/subSystem1/best_model_neural_network.pkl")
-    print(f"Best model had a validation loss of: {best_val_loss:.2f} and the validation accuracy is {best_val_accuracy * 100:.2f}%")
+    print(f"Best model had a validation loss of: {best_val_loss:.2f},validation accuracy of {best_val_accuracy * 100:.2f}% and test accuracy of {test_accuracy * 100:.2f}%")
     print(f"Best epoch: {best_epoch}")
 
 
