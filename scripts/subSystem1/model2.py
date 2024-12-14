@@ -3,12 +3,11 @@ import pandas as pd
 from torch import nn
 from torch.utils.data import Dataset, DataLoader, random_split
 import torch
-import joblib
 
 
 #Neural network class
 class Neural_Network(nn.Module):
-    def __init__(self, features_in=22, features_out=7):  #22 different AU+valence and arousal and 7 different emotions
+    def __init__(self, features_in=20, features_out=7):  #22 different AU+valence and arousal and 7 different emotions
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(features_in, 1024),
@@ -152,14 +151,14 @@ def main():
     
     #Save the best model at the end of training
     model.load_state_dict(best_model_wts) 
-    #Save the best model and configurations (hyperparameters) using joblib
+    torch.save(model.state_dict(), "scripts/subSystem1/best_nn_model.pth")
+
     model_info = {
         "model": model,
         "best_weights": best_model_wts,
         "best_val_loss": best_val_loss,
         "best_val_accuracy": best_val_accuracy,
     }    
-    joblib.dump(model_info, "scripts/subSystem1/best_nn_model.pkl")
     print(model_info)
 
 
