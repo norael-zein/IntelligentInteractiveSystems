@@ -14,7 +14,7 @@ import joblib
 #Read and Preprocess the dataset 
 df = pd.read_csv("processed/facial_features_original.csv")
 emotion = df["expression"]
-inputs = df.drop(["subDirectory_filePath", "expression"], axis=1)
+inputs = df.drop(["subDirectory_filePath", "expression", "valence", "arousal"], axis=1)
 
 #Do a balanced split of the dataset for train/val/test: We decided to split into 70/20/10:
 
@@ -84,9 +84,8 @@ for model_name, model, param_grid in models_and_params:
     #Save the best model into best_model
     if not best_model or test_accuracy > best_model["best_accuracy"]:
         best_model = {
-            "current_model": current_model,
             "model_name": model_name,
-            "model": current_model.estimator,
+            "model": current_model.best_estimator_,
             "best_params": current_model.best_params_,
             "best_accuracy": test_accuracy
         }
