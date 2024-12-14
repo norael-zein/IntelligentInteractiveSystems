@@ -84,6 +84,7 @@ for model_name, model, param_grid in models_and_params:
     #Save the best model into best_model
     if not best_model or test_accuracy > best_model["best_accuracy"]:
         best_model = {
+            "current_model": current_model,
             "model_name": model_name,
             "model": current_model.estimator,
             "best_params": current_model.best_params_,

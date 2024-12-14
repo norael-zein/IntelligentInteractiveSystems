@@ -39,6 +39,7 @@ class FeatureExtractor:
         try:
             features = self.__detector.detect_image([TEMP_IMAGE_PATH])
             if not features.aus.empty:
+                print(features.aus)
                 return features.aus
             else:
                 print("Error (FeatureExtraction): No face detected")
