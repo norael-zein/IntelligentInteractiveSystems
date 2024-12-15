@@ -51,9 +51,17 @@ def main():
     #load model using apikey
     genai.configure(api_key=apiKey)
     model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content("Introduce yourself")
+    example_prompt = """
+    You are an experienced mental health professional.
+    Your goal is to provide calming, understanding guidance to help users practice mindfulness exercises.
+    You are supposed to be good at helping people relax.
+    Listen to and understand the users questions, writing answers with a calm understanding.
+    limit each response to a minimum of 10 words, and a maximum of 100
+    """
+    response = model.generate_content(example_prompt+"Introduce yourself")
     
-    furhat.say(response, blocking = True)
+    furhat.say(text = response.text, blocking = True)
+    quit()
     while True:
         #State progressions always start with introduction and preparation.
         request = state.introduction(furhat)
