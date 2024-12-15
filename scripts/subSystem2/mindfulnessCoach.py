@@ -4,31 +4,43 @@
 """
 
 #imports
-from furhat_remote_api import FurhatRemoteAPI
-from furhat_remote_api import Gesture
-import google.generativeai as genai
+#generic
 import os
 import sys
+import pandas as pd
+import pickle
+#furhat
+from furhat_remote_api import FurhatRemoteAPI
+from furhat_remote_api import Gesture
+#llm 
+import google.generativeai as genai
+
 
 # machine agnostic way of adding project folders to sys.path
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__),"..")) #scripts
-system1 = project_root + "/subSystem1"
-system2 = project_root + "/subSystem2"
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__),"..",".."))
+script = os.path.abspath(os.path.join(os.path.dirname(__file__),"..")) #scripts
+system1 = script + "/subSystem1"
+system2 = script + "/subSystem2"
 if project_root not in sys.path:
     sys.path.append(project_root)
+if script not in sys.path:
+    sys.path.append(script)
 if system1 not in sys.path:
     sys.path.append(system1)
 if system2 not in sys.path:
     sys.path.append(system2)
-    
-from subSystem1.best_model import *
-import pandas as pd
 
+#package imports
+import exercise, state
+from subSystem1.best_model import *
+import subSystem1.featureExtractor as fe
+
+"""_summary_
+main driver
+"""
 def main():
-    
-    model = best_model()
-    print(2)
-    quit()
+    emotions = best_model()
+    print("emotions:", emotions)
     
     #furhat
     furhat = FurhatRemoteAPI("localhost")
@@ -39,45 +51,19 @@ def main():
     #load model using apikey
     genai.configure(api_key=apiKey)
     model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content("Explain how AI works")
+    response = model.generate_content("Introduce yourself")
     
-    print(response.text)
+    furhat.say(response, blocking = True)
     while True:
         #State progressions always start with introduction and preparation.
-        request = introduction(furhat)
+        request = state.introduction(furhat)
     
         #seated practice
         if request == "seated practice":
-            seated_practice()
+            exercise.seated_practice()
     
-    #birb. maybe make gemini make chicken noises, idk.
-    return "birb"
 
-def seated_practice():
-    
-    #will test with more information about how to effectively engineer prompts.
-    promptHeaders = []
-    
-    breathing()
-    
-    reflection()
-    
-    end_state()
-    
-def wait_response(furhat):
-    """
-    
-    Args:
-        furhat (_type_): _description_
 
-    Returns:
-        _type_: _description_
-    """
-
-    while True:
-        response = furhat.listen().message
-        if response != "": return response
-        
     
     
 def get_emotion():
@@ -90,21 +76,7 @@ def get_emotion():
 def get_facialfeatures():
     pass
 
-def introduction():
-    """
-    
-    """
-    pass
-    
 
-def breathing():
-    pass
-
-def reflection():
-    pass
-
-def end_state():
-    pass
 
 def get_key():
     """ 
