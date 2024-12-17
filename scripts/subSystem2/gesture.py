@@ -16,7 +16,7 @@ def reflect():
 
 def close_eyes():
         furhat.gesture(body={
-        "name": "CalmBreathing",
+        "name": "ClosedEyes",
         "frames": [
             {
                 "time": [0.5, 20],
