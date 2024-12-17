@@ -48,28 +48,50 @@ def main():
     # Use the environment variable to access api key
     apiKey = get_key()
     
-    #load model using apikey
-    genai.configure(api_key=apiKey)
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    context_prompt = """
+    persona = """
     You are an experienced mental health professional.
-    Your goal is to provide calming, understanding guidance to help users practice mindfulness exercises.
+    Your goal is to provide calming, understanding guidance to help users practice mindfulness meditation exercises.
     You are supposed to be good at helping people relax.
     Listen to and understand the users questions, writing answers with a calm understanding.
     limit each response to a minimum of 10 words, and a maximum of 100.
     """
-    repeat = False
-    response = model.generate_content(context_prompt+"Introduce yourself")
-    #continues while user 
-    while True:
-        #State progressions always start with introduction and preparation.
-        request = state.wait_response()
     
-        #seated practice
-        if request == "seated practice":
-            exercise.seated_practice()
-        else:
-            furhat.say("")
+    #load model using apikey, give prompt for persona as initial instructions
+    genai.configure(api_key=apiKey)
+    model = genai.GenerativeModel("gemini-1.5-flash",
+                                  system_instruction=persona)
+    
+    #Initialize History
+    history = []
+    
+    model_response = model.generate_content("introduce yourself").text
+    furhat.say(text = model_response, blocking = True)
+
+    #Interaction loop
+    while True:
+        #Read user input
+        user_prompt = furhat.listen().message
+  
+        if user_prompt.lower() in ["quit", "exit"]:
+            break
+      
+        #Build Prompt
+        prompt_from_history = build_prompt_from_history(history, user_prompt)
+
+        #Send to model and receive response
+        response = model.generate_content(prompt_from_history)
+  
+        #Handle errors if there was no content
+        if response.text == None or response.text == "":
+            print("Model Error!")
+            continue
+      
+        #output response
+        furhat.say(text = response.text, blocking = True)
+  
+        #Add the message to history
+        history.append({"role":"user", "parts": [user_prompt]})
+        history.append({"role":"model", "parts": [response.text]})
 
 def get_key():
     """ 
@@ -83,6 +105,10 @@ def get_key():
                 _, value = line.split('=')
                 os.environ['GEMINI_API_KEY'] = value.strip()
     return os.getenv('GEMINI_API_KEY')
+
+def build_prompt_from_history(history, current_user_prompt):
+      messages = history + [{"role": "user", "parts": [current_user_prompt]}]
+      return messages # This now a prompt for Gemini.
 
 if __name__== "__main__":
     main()
