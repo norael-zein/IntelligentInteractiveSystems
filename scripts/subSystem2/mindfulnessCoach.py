@@ -35,7 +35,7 @@ import exercise, state
 from subSystem1.best_model import *
 import subSystem1.featureExtractor as fe
 
-"""_summary_
+"""
 main driver
 """
 def main():
@@ -51,40 +51,25 @@ def main():
     #load model using apikey
     genai.configure(api_key=apiKey)
     model = genai.GenerativeModel("gemini-1.5-flash")
-    example_prompt = """
+    context_prompt = """
     You are an experienced mental health professional.
     Your goal is to provide calming, understanding guidance to help users practice mindfulness exercises.
     You are supposed to be good at helping people relax.
     Listen to and understand the users questions, writing answers with a calm understanding.
-    limit each response to a minimum of 10 words, and a maximum of 100
+    limit each response to a minimum of 10 words, and a maximum of 100.
     """
-    response = model.generate_content(example_prompt+"Introduce yourself")
-    
-    furhat.say(text = response.text, blocking = True)
-    quit()
+    repeat = False
+    response = model.generate_content(context_prompt+"Introduce yourself")
+    #continues while user 
     while True:
         #State progressions always start with introduction and preparation.
-        request = state.introduction(furhat)
+        request = state.wait_response()
     
         #seated practice
         if request == "seated practice":
             exercise.seated_practice()
-    
-
-
-    
-    
-def get_emotion():
-    """
-    get model output prediction from current 
-    """
-    pass
-    
-    
-def get_facialfeatures():
-    pass
-
-
+        else:
+            furhat.say("")
 
 def get_key():
     """ 
