@@ -15,7 +15,36 @@ def reflect():
     pass
 
 def close_eyes():
-    pass
+        furhat.gesture(body={
+        "name": "CalmBreathing",
+        "frames": [
+            {
+                "time": [0.5, 20],
+                "persist": True,
+                "params": {
+                    "BLINK_LEFT": 1.0,  
+                    "BLINK_RIGHT": 1.0,  
+                    "SMILE_CLOSED": 0.2,  
+                }
+            },
+            {
+                "time": [0, 20],
+                "persist": False,
+                "params": {
+                    "SMILE_CLOSED": 1
+
+                }
+            },
+            {
+                "time": [19, 20],
+                "persist": False,
+                "params": {
+                    "reset": True  
+                }
+            }
+        ],
+        "class": "furhatos.gestures.Gesture"
+    })
 
 def surprise():
     furhat.gesture(body={
@@ -193,8 +222,8 @@ def test():
         "name": "CalmBreathing",
         "frames": [
             {
-                "time": [0, 2],
-                "persist": False,
+                "time": [0.5, 20],
+                "persist": True,
                 "params": {
                     "BLINK_LEFT": 1.0,  
                     "BLINK_RIGHT": 1.0,  
@@ -202,40 +231,15 @@ def test():
                 }
             },
             {
-                "time": [2, 4],
+                "time": [0, 20],
                 "persist": False,
                 "params": {
-                    "SMILE_CLOSED": 1,  # Lätt leende
+                    "SMILE_CLOSED": 1
 
                 }
             },
             {
-                "time": [4, 6],
-                "persist": False,
-                "params": {
-                    "BLINK_LEFT": 1.0,  
-                    "BLINK_RIGHT": 1.0,  
-                    "SMILE_CLOSED": 0.2, 
-                }
-            },
-            {
-                "time": [6, 8],
-                "persist": False,
-                "params": {
-                    "SMILE_CLOSED": 0.1,  
-                }
-            },
-            {
-                "time": [8, 10],
-                "persist": False,
-                "params": {
-                    "BLINK_LEFT": 1.0,  
-                    "BLINK_RIGHT": 1.0, 
-                    "SMILE_CLOSED": 0.2,  
-                }
-            },
-            {
-                "time": [10, 12],
+                "time": [19, 20],
                 "persist": False,
                 "params": {
                     "reset": True  
