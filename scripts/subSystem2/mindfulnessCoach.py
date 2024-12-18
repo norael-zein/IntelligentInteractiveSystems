@@ -39,8 +39,7 @@ def main():
     main driver function
     """
     start_time = None
-    last_action_start = None
-    states = state.States()
+    last_action_start = float("inf")
     #state progression
     prog = iter(["start", "body", "awareness", "breathing", "reflection"])
     sys_state = next(prog)
@@ -61,7 +60,7 @@ def main():
     history = []
     
     #Introduction
-    model_response = model.generate_content("introduce yourself").text
+    model_response = model.generate_content("Introduce yourself and ask if the user would like to begin practice.")
     furhat.say(text = model_response.text, blocking = True)
     history.append({"role":"model", "parts": [model_response.text]})
 
@@ -71,42 +70,49 @@ def main():
         user_prompt = furhat.listen().message
   
         #Build Prompt
-        messages = history.append({"role": "user", "parts": [user_prompt]})
+        history.append({"role": "user", "parts": [user_prompt]})
 
         #Send to model and receive response
-        response = model.generate_content(messages)
+        response = model.generate_content(history)
   
         #handle errors if they occur?
         if response.text == None or response.text == "":
             print("No response")
             continue
         
-        #system start
-        if sys_state is "start" and response.text is "[START]":
-            sys_state = next(prog)
-            start_time = last_action_start = time.time()
-            system_instruction = state.body()
-            history.append({"role": "system", "parts": [system_instruction]})
-            response = model.generate_content(history)
-        #state progression?  
-        elif last_action_start - time.time() > 30:
-            pass #continue here
-            
-            
         #Handle if user wants to exit.
-        if response.text == "[EXIT]":
+        if response.text.strip() == "[EXIT]" or sys_state == "reflection":
             system_instruction = state.end_state()
-            history.append({"role": "system", "parts": [system_instruction]})
+            history.append({"role": "user", "parts": [system_instruction]})
             response = model.generate_content(history)
             furhat.say(text = response.text, blocking = True)
             break
+        #system state handling block, start
+        if sys_state == "start" and response.text.strip() == "[START]":
+        #if state reaches reflection, trigger wind down sequence
+            sys_state = next(prog)
+            start_time = last_action_start = time.time()
+            get_prompt = getattr(state, sys_state)
+            system_instruction = get_prompt()
+            history.append({"role": "user", "parts": [system_instruction]})
+            response = model.generate_content(history)
+        #state progression every 30th second
+        elif last_action_start - time.time() > 30:
+            last_action_start = time.time()
+            sys_state = next(prog)
+            get_prompt = getattr(state, sys_state)
+            system_instruction = get_prompt()
+            history.append({"role": "user", "parts": [system_instruction]})
+            response = model.generate_content(history)
         
         #output response
         furhat.say(text = response.text, blocking = True)
   
-        #Add the message to history
+        #Add the response to history
         #history.append({"role":"user", "parts": [user_prompt]})
         history.append({"role":"model", "parts": [response.text]})
+        #small pause for more natural progression
+        
 
 def get_key():
     """ 
@@ -124,10 +130,9 @@ def get_key():
 def get_persona():
     return """
     You are an experienced mental health professional.
-    Your goal is to provide calming, understanding guidance to help users 
+    Your goal is to provide calming guidance to help users 
     practice mindfulness meditation exercises.
     You are supposed to be good at helping people relax.
-    Listen to and understand the users questions, writing answers with a calm understanding.
     limit each response to a minimum of 10 words, and a maximum of 100.
     
     Additionally, if the user indicates they want to exit the program (e.g., 
