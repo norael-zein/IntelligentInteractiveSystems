@@ -159,7 +159,7 @@ def big_smile():
 
 def listen_smile_response():
         """
-        Furhat listen and smiles during a conversation
+        Furhat listens and smiles during a conversation
         """
         furhat.gesture(body={
         "name":"Smile",
@@ -211,7 +211,7 @@ def listen_nod_response():
 
 def surprise():
     """
-    Furhat gets suprised
+    Furhat gets surprised
     """
     furhat.gesture(body={
         "name":"Surprise",
