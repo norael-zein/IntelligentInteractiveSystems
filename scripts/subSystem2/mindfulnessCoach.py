@@ -5,7 +5,7 @@
 
 #imports
 #generic
-import os, sys, time
+import os, sys, time, random
 import pandas as pd
 import pickle
 #furhat
@@ -13,7 +13,6 @@ from furhat_remote_api import FurhatRemoteAPI
 from furhat_remote_api import Gesture
 #llm 
 import google.generativeai as genai
-
 
 # machine agnostic way of adding project folders to sys.path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__),"..",".."))
@@ -34,6 +33,37 @@ import exercise, state
 from subSystem1.best_model import *
 import subSystem1.featureExtractor as fe
 
+def state_main():
+    """
+    updated driver function for parallel state tracks.
+    """
+    unhappy_exercises = ["body","awareness","breathing"]        # If unhappy, suggest calming exercises to ground the user.
+    happy_exercises = ["gratitude", "visualization", "eating"]  # If happy, suggest "happy" exercises.
+    
+    furhat = FurhatRemoteAPI("localhost")
+    
+    apiKey = get_key()              # Use the environment variable to access api key
+    genai.configure(api_key=apiKey) # Load model using apikey, 
+    persona = get_persona()         # Give prompt for persona as initial instructions
+    model = genai.GenerativeModel("gemini-1.5-flash",
+                                  system_instruction=persona)
+    
+    history = []                    # Init history, check emotional state for first exercise
+    emotion, history = state.introduction(model, furhat, history)
+    
+    for i in range(3):              # Proceed over 3 exercises
+        #history = []
+        if emotion in ["sad","angry","fear","disgust","surprise"]: # Of Angry, Disgust, Fear, Happy, Neutral, Sad, Suprise
+            exercise = unhappy_exercises[i]
+            next_state = getattr(state, exercise)
+            emotion, history = next_state(model, furhat, history)
+        else:
+            exercise = happy_exercises[i]
+            next_state = getattr(state, exercise)
+            emotion, history = next_state(model, furhat, history)
+    
+    state.outro(model, furhat, history)
+
 def main():
     """
     main driver function
@@ -42,10 +72,16 @@ def main():
     last_action_start = float("inf")
     #state progression
     prog = iter(["start", "body", "awareness", "breathing", "reflection"])
+    # if unhappy, suggest calming exercises to ground the user.
+    unhappy_exercises = {"body","awareness","breathing"}
+    # If happy, try an exercise which focuses on positive feelings about things in their life
+    # like visualizing a positive outcome, or gratitude
+    happy_exercises = {"gratitude","visualization","eating"}
+    
     sys_state = next(prog)
     #furhat
     furhat = FurhatRemoteAPI("localhost")
-    
+    furhat.attend("closest")
     # Use the environment variable to access api key
     apiKey = get_key()
     
@@ -134,9 +170,14 @@ def get_persona():
     practice mindfulness meditation exercises.
     You are supposed to be good at helping people relax.
     limit each response to a minimum of 10 words, and a maximum of 100.
+    Keep to the instructions given you receive after 'prompt: ' and do not give instructions beyond these prompts
+    as the exercise instructions are externally managed.
+    
+    Inform the user when we start an exercise. 
+    Exercise names are preceded and followed by two stars (e.g. **mindful sleeping**).
     
     Additionally, if the user indicates they want to exit the program (e.g., 
-    "quit", "exit", "stop", "I want to leave", or similar), respond with the 
+    "quit", "goodbye", "stop", "I want to leave", or similar), respond with the 
     *exact* text: [EXIT] and nothing else.
     
     If the user wishes to begin practice (e.g., "start", "begin", "I would 
@@ -145,4 +186,5 @@ def get_persona():
     """
 
 if __name__== "__main__":
-    main()
+    #main()
+    state_main() #for parallel tracks

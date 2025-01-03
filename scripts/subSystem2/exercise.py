@@ -1,19 +1,18 @@
 import state
 #Exercises are intended to define state progressions in an exercise
 
-def seated_practice(repeating = False):
+class flow:
+    def __init__(self):
+        pass
     
-    #will test with more information about how to effectively engineer prompts.
-    state.prep(exercise="seated practice")
+    def positive():
+        """
+        positive state 
+        """
+        pass
     
-    state.ready_check()
+    def negative():
+        pass
     
-    state.body()
-    
-    state.awareness()
-    
-    state.breathing()
-    
-    state.reflection()
-    
-    state.end_state()
+    def neutral():
+        pass
