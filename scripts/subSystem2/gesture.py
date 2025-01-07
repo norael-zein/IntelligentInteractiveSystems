@@ -9,6 +9,7 @@ furhat = FurhatRemoteAPI("localhost")
 """
 Gestures made by Furhat during the interaction with the user 
 """
+
 def deep_breath():
         """
         Furhat is taking a deep breath

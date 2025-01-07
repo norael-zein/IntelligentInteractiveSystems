@@ -10,6 +10,14 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV
 import joblib
 
+"""
+This is a machine learning pipeline that produces different models 
+for predicting emotions from Action Units, Arousal and Valence. The model with best accuracy will later 
+be selected to predict new unseen information from faces
+
+INPUT: Facial_features_original.csv (Arousal, Valence and Action Units)
+OUTPUT: Model with configurations that produced the best accuracy, saved in models/emotion_model.pkl
+"""
 
 #Read and Preprocess the dataset 
 df = pd.read_csv("processed/facial_features_original.csv")

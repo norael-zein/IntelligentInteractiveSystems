@@ -4,11 +4,19 @@ from torch import nn
 from torch.utils.data import Dataset, DataLoader, random_split
 import torch
 
+"""
+This is a machine learning pipeline of a Neural Network predicts emotions based on Arousal, Valence 
+and Action Units. 
+
+INPUT: Facial_features_original.csv (Arousal, Valence and Action Units)
+OUTPUT: Neural network with lowest loss, saved in models/emotion_model.pth
+"""
 
 #Neural network class
 class Neural_Network(nn.Module):
     def __init__(self, features_in=22, features_out=7):  #22 different AU+valence and arousal and 7 different emotions
         super().__init__()
+        #Sequential neural network with linear layers
         self.net = nn.Sequential(
             nn.Linear(features_in, 1024),
             nn.ReLU(),
@@ -114,11 +122,12 @@ def main():
                 val_loss += loss_fn(predictions, labels).item() 
                 correct_val += (predictions.softmax(dim=1).argmax(dim=1) == labels).sum()
 
-            val_loss /= len(val)  #DOUBLE CHECK IF THIS SHOULD BE DIVIDED BY ONE BATCH OR WHOLE DATASET
+            #Validation loss of current model
+            val_loss /= len(val) 
             val_accuracy = correct_val / len(val)
             print(f"Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy * 100:.2f}%")
             
-            #Early stopping check
+            #Early stopping check. Check if current validation loss is smaller than the best validation loss
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
                 best_val_accuracy = val_accuracy
@@ -126,7 +135,7 @@ def main():
                 best_epoch = epoch + 1  #Save the best epoch
                 patience_counter = 0  #Reset counter
             else:
-                patience_counter += 1
+                patience_counter += 1 #If our loss is greater than the best validation loss, continue
                 if patience_counter >= patience:
                     print("Early stopping triggered.")
                     model.load_state_dict(best_model_wts)  #Load the best model
