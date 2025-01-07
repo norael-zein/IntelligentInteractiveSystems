@@ -25,7 +25,7 @@ def main():
     aus_cropped = []
 
     # Iterate over the data sheet
-    for index, row in data_sheet.head(50).iterrows():
+    for index, row in data_sheet.iterrows():
 
         image_path_full = row['subDirectory_filePath']
         image_name = image_path_full.split('/')[-1]
