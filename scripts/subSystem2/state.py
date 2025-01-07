@@ -1,7 +1,7 @@
 #imports
 import time
 import exercise, gesture
-from subSystem1.best_model import *
+from subSystem1.bestModel import *
 import random
 
 def introduction(model, furhat, history):

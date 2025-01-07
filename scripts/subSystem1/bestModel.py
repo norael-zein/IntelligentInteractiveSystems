@@ -17,10 +17,13 @@ def best_model(extractor):
         valence = valence_model_data["model"].predict(action_units)
         arousal = arousal_model_data["model"].predict(action_units)
 
-        # TODO: Extend AUs with valence and arousal and pass to emotion model
-        print(action_units)
-        emotions = emotion_model_data["model"].predict(action_units)
+        # Combine valence, arousal, and action units
+        extended_action_units = action_units.copy()
+        extended_action_units.insert(0, "valence", valence)  # Add valence at the start
+        extended_action_units.insert(1, "arousal", arousal)  # Add arousal after valence
 
+        # Predict emotions
+        emotions = emotion_model_data["model"].predict(extended_action_units)
         return emotions
         
 
