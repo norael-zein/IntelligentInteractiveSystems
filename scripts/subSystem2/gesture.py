@@ -27,7 +27,7 @@ def deep_breath():
                 }
             },
             {
-                  "time": [3,4],
+                  "time": [2,3],
                   "persist": True,
                   "params": {
                         "PHONE_OOH_Q": 1
@@ -87,11 +87,11 @@ def close_eyes():
                 "params": {
                     "BLINK_LEFT": 1.0,  
                     "BLINK_RIGHT": 1.0,  
-                    "SMILE_CLOSED": 0.5,  
+                    "SMILE_CLOSED": 0.7,  
                 }
             },
             {
-                "time": [6,7],
+                "time": [2,7],
                 "persist": False,
                 "params": {
                     "reset": True  
