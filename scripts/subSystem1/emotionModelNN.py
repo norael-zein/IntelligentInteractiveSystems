@@ -151,7 +151,7 @@ def main():
     
     #Save the best model at the end of training
     model.load_state_dict(best_model_wts) 
-    torch.save(model.state_dict(), "scripts/subSystem1/best_nn_model.pth")
+    torch.save(model.state_dict(), "scripts/subSystem1/models/emotion_model_nn.pth")
 
     model_info = {
         "model": model,

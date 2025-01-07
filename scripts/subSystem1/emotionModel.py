@@ -92,4 +92,4 @@ for model_name, model, param_grid in models_and_params:
 
 print(f"Best model: {best_model["model_name"]} with best parameters: {best_model["best_params"]} and accuracy: {best_model["best_accuracy"]}")
 # Save the best model to a file
-joblib.dump(best_model, "scripts/subSystem1/best_model.pkl")
+joblib.dump(best_model, "scripts/subSystem1/models/emotion_model.pkl")

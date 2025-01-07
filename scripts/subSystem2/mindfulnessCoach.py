@@ -30,7 +30,7 @@ if system2 not in sys.path:
 
 #package imports
 import exercise, state
-from subSystem1.best_model import *
+from subSystem1.bestModel import *
 import subSystem1.featureExtractor as fe
 
 def state_main():
