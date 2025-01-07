@@ -114,8 +114,8 @@ def state(model, furhat, history, prompt, dur = 30, trig = "[EXIT]"):
         history.append({"role":"model", "parts": [response]})
         
         
-        
-    emotion = best_model()[0]       # array of emotions corresponding to face (first at 0)
+    extractor = fe.FeatureExtractor()
+    emotion = best_model(extractor)[0]       # array of emotions corresponding to face (first at 0)
     return emotion, history
     
 def reflection():
