@@ -45,7 +45,7 @@ class EmotionDataset(Dataset):
         data = pd.read_csv(data_path)
         
         #Drop emotions from data
-        self.inputs = torch.tensor(data.drop(["subDirectory_filePath", "expression", "arousal", "valence"], axis=1).to_numpy(dtype=np.float32))
+        self.inputs = torch.tensor(data.drop(["subDirectory_filePath", "expression"], axis=1).to_numpy(dtype=np.float32))
         
         #Emotions become numerical values
         self.index2label = [label for label in data["expression"].unique()]

@@ -14,6 +14,7 @@ def best_model(extractor):
         valence_model_data = joblib.load("scripts/subSystem1/models/valence_model.pkl")
         arousal_model_data = joblib.load("scripts/subSystem1/models/arousal_model.pkl")
 
+        #Predict valence and arousal
         valence = valence_model_data["model"].predict(action_units)
         arousal = arousal_model_data["model"].predict(action_units)
 
@@ -22,7 +23,7 @@ def best_model(extractor):
         extended_action_units.insert(0, "valence", valence)  # Add valence at the start
         extended_action_units.insert(1, "arousal", arousal)  # Add arousal after valence
 
-        # Predict emotions
+        # Predict emotions from valence, arousal and action units
         emotions = emotion_model_data["model"].predict(extended_action_units)
         return emotions
         
