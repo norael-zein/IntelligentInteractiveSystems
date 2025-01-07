@@ -1,3 +1,4 @@
+# Imports
 import os
 import pandas as pd
 from feat import Detector
@@ -13,8 +14,7 @@ output_aus_original = os.path.join(output, "facial_features_original.csv")
 output_aus_cropped = os.path.join(output, "facial_features_cropped.csv")
 
 # Load annotations from csv file
-data_sheet_original = pd.read_csv(input_data_sheet)
-data_sheet_cropped = pd.read_csv(input_data_sheet)
+data_sheet = pd.read_csv(input_data_sheet)
 
 # Initialize the feature detector
 detector = Detector(device='cpu')
@@ -25,7 +25,7 @@ def main():
     aus_cropped = []
 
     # Iterate over the data sheet
-    for index, row in data_sheet_original.iterrows():
+    for index, row in data_sheet.head(50).iterrows():
 
         image_path_full = row['subDirectory_filePath']
         image_name = image_path_full.split('/')[-1]
@@ -53,14 +53,14 @@ def main():
         except Exception as e:
             print(e)
 
-    # Combine all rows into single DataFrames
+    # Combine all rows into single DataFrames and save them
     if aus_original:
         df_original = pd.concat(aus_original, ignore_index=True)
-        df_original.to_csv(output_aus_original, index=False)
+        df_original.dropna().to_csv(output_aus_original, index=False)
 
     if aus_cropped:
         df_cropped = pd.concat(aus_cropped, ignore_index=True)
-        df_cropped.to_csv(output_aus_cropped, index=False)
+        df_cropped.dropna().to_csv(output_aus_cropped, index=False)
 
 if __name__ == '__main__':
     main()
