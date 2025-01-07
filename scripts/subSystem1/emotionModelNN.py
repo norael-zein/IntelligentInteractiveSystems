@@ -7,7 +7,7 @@ import torch
 
 #Neural network class
 class Neural_Network(nn.Module):
-    def __init__(self, features_in=20, features_out=7):  #22 different AU+valence and arousal and 7 different emotions
+    def __init__(self, features_in=22, features_out=7):  #22 different AU+valence and arousal and 7 different emotions
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(features_in, 1024),
