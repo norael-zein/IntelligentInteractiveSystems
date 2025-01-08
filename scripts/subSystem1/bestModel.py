@@ -8,18 +8,18 @@ def best_model(extractor):
     Output - Emotional states: Angry, Disgust, Fear, Happy, Neutral, Sad, Suprise
     """
     try:
-        action_units = extractor.extract_action_units()
+        action_units = extractor.get_action_units()
 
-        #Load model for predicting emotions
+        # Load model for predicting emotions
         emotion_model_data = joblib.load("scripts/subSystem1/models/emotion_model.pkl")
 
-        #Load model for predicting valence
+        # Load model for predicting valence
         valence_model_data = joblib.load("scripts/subSystem1/models/valence_model.pkl")
 
-        #Load moodel for predicting arousal
+        # Load model for predicting arousal
         arousal_model_data = joblib.load("scripts/subSystem1/models/arousal_model.pkl")
 
-        #Predict valence and arousal
+        # Predict valence and arousal
         valence = valence_model_data["model"].predict(action_units)
         arousal = arousal_model_data["model"].predict(action_units)
 
@@ -32,13 +32,13 @@ def best_model(extractor):
         emotions = emotion_model_data["model"].predict(extended_action_units)
         return emotions
         
-    #If image is not detected
+    # If image is not detected
     except ValueError:
-        print("No image detected")
+        print("Error (BestModel): No image detected")
         return None
 
 if __name__ == '__main__':
     extractor = fe.FeatureExtractor()
     while True:
-        best_model(extractor)
+        print(best_model(extractor))
         sleep(1)
