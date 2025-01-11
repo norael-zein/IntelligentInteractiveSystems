@@ -35,8 +35,8 @@ def best_model(extractor):
     except ValueError:
         print("Error (BestModel): No image detected")
         return None
-    finally:
-        extractor.clean_up()
+
+        
 
     
         
