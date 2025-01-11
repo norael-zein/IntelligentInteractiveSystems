@@ -72,7 +72,7 @@ models_and_params = [
         "solver": ["liblinear"]
     }),
     ("GradientBoostingClassifier", GradientBoostingClassifier(), {
-        "max_depth": [5,10,20,25],
+        "max_depth": [2,3,4,5,10,20,25],
         "max_features": ["log2", "sqrt"],
     })
 ]
