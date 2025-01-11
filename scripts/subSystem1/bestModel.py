@@ -29,14 +29,14 @@ def best_model(extractor):
 
         # Predict emotion from valence, arousal and action units
         emotions = emotion_model_data["model"].predict(extended_action_units)
-        extractor.clean_up()
         return emotions
         
     # If image is not detected
     except ValueError:
         print("Error (BestModel): No image detected")
         return None
-
+    finally:
+        extractor.clean_up()
 
     
         
