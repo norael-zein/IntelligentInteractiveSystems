@@ -143,7 +143,7 @@ def big_smile():
             "params":{
                 "BROW_UP_LEFT":1,
                 "BROW_UP_RIGHT":1,
-                "SMILE_OPEN": 1,
+                "SMILE_OPEN": 0.8,
                 "EYE_SQUINT_LEFT": 0.5,
                 "EYE_SQUINT_RIGHT": 0.5
                 }

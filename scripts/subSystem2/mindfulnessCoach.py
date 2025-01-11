@@ -40,8 +40,6 @@ def state_main():
     """
     unhappy_exercises = ["body","awareness","breathing"]        # If unhappy, suggest calming exercises to ground the user.
     happy_exercises = ["gratitude", "visualization", "eating"]  # If happy, suggest "happy" exercises.
-    unhappy_gestures = [gesture.close_eyes(), gesture.subtle_smile(), gesture.deep_breath()] # If unhappy, furhat makes one of the following gestures.
-    happy_gestures = [gesture.close_eyes(), gesture.subtle_smile(), gesture.subtle_smile()] # If happy, furhat makes one of the following gestures.
     furhat = FurhatRemoteAPI("localhost")
     
     apiKey = get_key()              # Use the environment variable to access api key
@@ -57,14 +55,10 @@ def state_main():
         #history = []
         if emotion in ["sad","angry","fear","disgust","surprise"]: # If Angry, Disgust, Fear, Happy, Neutral, Sad, Suprise
             exercise = unhappy_exercises[i]
-            time.sleep(0.7)
-            unhappy_gestures[i]
             next_state = getattr(state, exercise)
             emotion, history = next_state(model, furhat, history)
         else:
             exercise = happy_exercises[i]
-            time.sleep(0.7)
-            happy_gestures[i]
             next_state = getattr(state, exercise)
             emotion, history = next_state(model, furhat, history)
     

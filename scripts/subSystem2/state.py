@@ -15,6 +15,7 @@ def introduction(model, furhat, history):
 
 # raisin practice le mao
 def eating(model, furhat, history):
+    gesture.subtle_smile()
     eating_prompt = [
     'Now we will practice **mindful eating**. Begin by asking them to find a raisin or other small food item.',
     'Now ask them to observe its color, shape, texture and other details.',
@@ -26,6 +27,7 @@ def eating(model, furhat, history):
     return state(model, furhat, history, prompt=eating_prompt, dur=100)
 
 def gratitude(model, furhat, history):
+    gesture.close_eyes()
     gratitude_prompt = [
     'Now we will practice **gratitude**. For the current exercise, the user should take a moment to think of one thing that brings them joy.',
     'It could be a memory, a person, or even a small object.',
@@ -34,6 +36,7 @@ def gratitude(model, furhat, history):
     return state(model, furhat, history, prompt=gratitude_prompt)
 
 def visualization(model, furhat, history):
+    gesture.subtle_smile()
     visualization_prompt = [
     'Now we will practice our **visualization**. For the current exercise, the user should take a moment to imagine something they are looking forward to.',
     'Ask them to picture it vividly in their mind. What do they see, hear, and feel as it happens?',
@@ -42,6 +45,7 @@ def visualization(model, furhat, history):
     return state(model, furhat, history, prompt=visualization_prompt)
 
 def body(model, furhat, history):
+    gesture.close_eyes()
     body_prompt = [
     'Now we will practice **bodily relaxation**. For the current exercise, the user should first get comfortable in a sitting position.',
     'Their gaze should rest relaxed at a point in front of them.',
@@ -50,6 +54,7 @@ def body(model, furhat, history):
     return state(model, furhat, history, prompt=body_prompt)
   
 def awareness(model, furhat, history):
+    gesture.subtle_smile()
     awareness_prompt = [
     'Now we will practice **awareness of ones senses**. For the current practice, guide the user to take notice of the sensations around them.',
     'The user should bring non-judgemental awareness to their sensations, both within and outside the body.',
@@ -58,6 +63,7 @@ def awareness(model, furhat, history):
     return state(model, furhat, history, awareness_prompt)
 
 def breathing(model, furhat, history):
+    gesture.deep_breath()
     breathing_prompt = [
     'Now we will practice **mindful breathing**. Now the user should bring attention to their breathing.',
     'Bring user attention to their breathing in their belly or chest.',
@@ -117,6 +123,7 @@ def state(model, furhat, history, prompt, dur = 30, trig = "[EXIT]"):
     return emotion, history
     
 def reflection():
+    gesture.reflect()
     reflection_prompt = """
     The user has now finished practicing their mindfulness.
     Try to bring the user's awareness back to their surroundings.
@@ -125,6 +132,7 @@ def reflection():
     return reflection_prompt
 
 def end_state():
+    gesture.big_smile()
     end_prompt = """
     The current exercise is now over.
     Congratulate the user for a job well done, and encourage them to take this sense of presence with them throughout their day.
