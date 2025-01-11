@@ -1,5 +1,4 @@
 import joblib
-import featureExtractor as fe
 from time import sleep
 
 def best_model(extractor):
@@ -30,6 +29,7 @@ def best_model(extractor):
 
         # Predict emotion from valence, arousal and action units
         emotions = emotion_model_data["model"].predict(extended_action_units)
+        extractor.clean_up()
         return emotions
         
     # If image is not detected
@@ -37,8 +37,6 @@ def best_model(extractor):
         print("Error (BestModel): No image detected")
         return None
 
-if __name__ == '__main__':
-    extractor = fe.FeatureExtractor()
-    while True:
-        print(best_model(extractor))
-        sleep(1)
+
+    
+        

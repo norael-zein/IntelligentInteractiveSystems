@@ -3,6 +3,10 @@ import time
 import exercise, gesture
 from subSystem1.bestModel import *
 import random
+from subSystem1.featureExtractor import FeatureExtractor
+
+#Feature extractor used
+extractor = FeatureExtractor()
 
 def introduction(model, furhat, history):
     gesture.subtle_smile()
@@ -22,7 +26,6 @@ def eating(model, furhat, history):
     return state(model, furhat, history, prompt=eating_prompt, dur=100)
 
 def gratitude(model, furhat, history):
-    gesture.close_eyes()
     gratitude_prompt = [
     'Now we will practice **gratitude**. For the current exercise, the user should take a moment to think of one thing that brings them joy.',
     'It could be a memory, a person, or even a small object.',
@@ -31,7 +34,6 @@ def gratitude(model, furhat, history):
     return state(model, furhat, history, prompt=gratitude_prompt)
 
 def visualization(model, furhat, history):
-    gesture.subtle_smile()
     visualization_prompt = [
     'Now we will practice our **visualization**. For the current exercise, the user should take a moment to imagine something they are looking forward to.',
     'Ask them to picture it vividly in their mind. What do they see, hear, and feel as it happens?',
@@ -40,7 +42,6 @@ def visualization(model, furhat, history):
     return state(model, furhat, history, prompt=visualization_prompt)
 
 def body(model, furhat, history):
-    gesture.close_eyes()
     body_prompt = [
     'Now we will practice **bodily relaxation**. For the current exercise, the user should first get comfortable in a sitting position.',
     'Their gaze should rest relaxed at a point in front of them.',
@@ -49,7 +50,6 @@ def body(model, furhat, history):
     return state(model, furhat, history, prompt=body_prompt)
   
 def awareness(model, furhat, history):
-    gesture.subtle_smile()
     awareness_prompt = [
     'Now we will practice **awareness of ones senses**. For the current practice, guide the user to take notice of the sensations around them.',
     'The user should bring non-judgemental awareness to their sensations, both within and outside the body.',
@@ -63,7 +63,6 @@ def breathing(model, furhat, history):
     'Bring user attention to their breathing in their belly or chest.',
     'Simply paying attention to the rise and fall as they breath in and out.'
     ]
-    gesture.deep_breath()
     return state(model, furhat, history, breathing_prompt)
 
 def outro(model, furhat, history, early_stop = False):
@@ -100,7 +99,7 @@ def state(model, furhat, history, prompt, dur = 30, trig = "[EXIT]"):
         system_instruction = next(prompt_iter, "")
         
         user_prompt = furhat.listen().message               # Read user input, wait 5 seconds for response by default.
-        random.choice([gesture.listen_nod_response, gesture.listen_smile_response])() ##Randomize between two gestures every time
+        random.choice([gesture.listen_nod_response, gesture.listen_smile_response])() #Randomize between two gestures every time
         history.append({"role": "user", "parts": [user_prompt]}) # Build Prompt
         if system_instruction != "":
             history.append({"role": "user", "parts": "prompt: "+system_instruction}) # If we have more instructions, add them
@@ -113,13 +112,11 @@ def state(model, furhat, history, prompt, dur = 30, trig = "[EXIT]"):
         furhat.say(text = response, blocking = True)   #output response
         history.append({"role":"model", "parts": [response]})
         
-        
-    extractor = fe.FeatureExtractor()
-    emotion = best_model(extractor)[0]       # array of emotions corresponding to face (first at 0)
+    emotion = best_model(extractor)       # array of emotions corresponding to face
+    print(f"Current feeling: {emotion[0]}")
     return emotion, history
     
 def reflection():
-    gesture.reflect()
     reflection_prompt = """
     The user has now finished practicing their mindfulness.
     Try to bring the user's awareness back to their surroundings.
@@ -128,7 +125,6 @@ def reflection():
     return reflection_prompt
 
 def end_state():
-    gesture.big_smile()
     end_prompt = """
     The current exercise is now over.
     Congratulate the user for a job well done, and encourage them to take this sense of presence with them throughout their day.
