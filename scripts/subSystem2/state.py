@@ -121,7 +121,6 @@ def state(model, furhat, history, prompt, dur = 30, trig = "[EXIT]"):
     emotion = best_model(extractor)  # Update emotion after each exercise
     print(f"Current feeling: {emotion[0]}")
     
-
     return emotion, history
     
 def reflection():
