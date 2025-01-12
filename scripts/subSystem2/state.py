@@ -118,11 +118,10 @@ def state(model, furhat, history, prompt, dur = 30, trig = "[EXIT]"):
         furhat.say(text = response, blocking = True)   #output response
         history.append({"role":"model", "parts": [response]})
 
-    
     emotion = best_model(extractor)  # Update emotion after each exercise
     print(f"Current feeling: {emotion[0]}")
+    
 
-    extractor.clean_up()  # Clean up after each exercise   
     return emotion, history
     
 def reflection():
@@ -142,6 +141,7 @@ def end_state():
     Welcome them to practice with you again in the future.
     Ask if they would like to continue, or if they would like to stop for now.
     """
+    extractor.clean_up()  # Clean up after each exercise 
     return end_prompt
 
 

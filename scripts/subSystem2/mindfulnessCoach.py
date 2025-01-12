@@ -61,7 +61,6 @@ def state_main():
             exercise = happy_exercises[i]
             next_state = getattr(state, exercise)
             emotion, history = next_state(model, furhat, history)
-    
     state.outro(model, furhat, history)
 
 def main():
