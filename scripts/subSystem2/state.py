@@ -137,8 +137,7 @@ def end_state():
     end_prompt = """
     The current exercise is now over.
     Congratulate the user for a job well done, and encourage them to take this sense of presence with them throughout their day.
-    Welcome them to practice with you again in the future.
-    Ask if they would like to continue, or if they would like to stop for now.
+    Say good bye, and welcome them to practice again in the future.
     """
     extractor.clean_up()  # Clean up after each exercise 
     return end_prompt
