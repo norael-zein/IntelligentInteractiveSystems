@@ -1,5 +1,4 @@
 import joblib
-from time import sleep
 
 def best_model(extractor):
     """
@@ -35,8 +34,3 @@ def best_model(extractor):
     except ValueError:
         print("Error (BestModel): No image detected")
         return None
-
-        
-
-    
-        
