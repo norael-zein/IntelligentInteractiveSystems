@@ -22,7 +22,6 @@ class FeatureExtractor:
         self.__cap = cv2.VideoCapture(0)
         self.__lock = threading.Lock()
         self.__latest_aus = None
-        self.__face_data = (0.0, 0.0, 0.0, 0.0)
         self.__stop_event = threading.Event()
 
         if not self.__cap.isOpened():
@@ -34,6 +33,7 @@ class FeatureExtractor:
 
         # Get width and height of the screen
         self.__screen_bounds = (self.__cap.get(cv2.CAP_PROP_FRAME_WIDTH), self.__cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.__face_data = (0.5 * self.__screen_bounds[0], 0.5 * self.__screen_bounds[1], 0.0, 0.0)
 
     def __capture_and_extract(self):
         """
@@ -96,13 +96,32 @@ class FeatureExtractor:
         with self.__lock:
             return self.__latest_aus
 
-    def get_face_data(self):
+    def get_furhat_coordinates(self):
         """
-        Returns the latest face data as a 6-tuple (x, y, w, h, screen_width, screen_height).
-        Returns None if no data is available.
+        Returns the coordinates in Furhat space in [m] --> (x, y, z).
+        Returns (0.0, 0.0, 0.5) if no data is available.
         """
+        fov_x = 0.75  # Rough estimate for distance ~50 cm from the screen, in [m]
+        fov_y = 0.50  # Rough estimate for distance ~50 cm from the screen, in [m]
+
         with self.__lock:
-            return self.__face_data + self.__screen_bounds
+            x, y, w, h = self.__face_data
+            sw, sh = self.__screen_bounds
+
+        mid_x = x + w / 2
+        mid_y = y + h / 2
+
+        relative_x = 1 - (mid_x / sw)  # 2D Coordinate System has origin at top right
+        relative_y = 1 - (mid_y / sh)  # Furhat has origin at the center, x grows to the right, y to the top
+
+        fov_relative_x = relative_x * fov_x
+        fov_relative_y = relative_y * fov_y
+
+        furhat_x = fov_relative_x - 0.5 * fov_x  # Offset by half FOV
+        furhat_y = fov_relative_y - 0.5 * fov_y  # Offset by half FOV
+        furhat_z = 0.5  # Distance from the screen
+
+        return furhat_x, furhat_y, furhat_z
 
     def clean_up(self):
         """

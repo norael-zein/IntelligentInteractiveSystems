@@ -101,8 +101,8 @@ def state(model, furhat, history, prompt, dur = 30, trig = "[EXIT]"):
     history.append({"role": "user", "parts": "prompt: "+next(prompt_iter, "")})
     model_response = model.generate_content(history).text
     
-    loc = extractor.get_face_data() #(x, y, w, h, screen_width, screen_height)
-    furhat.attend(location=f"{(loc[0]+loc[2]/2)/ppm},{(loc[1]+loc[3]/2)/ppm},0")  #furhat works in meters Meter = Pixels/3779.527559
+    x, y, z = extractor.get_furhat_coordinates()
+    furhat.attend(location=f"{x},{y},{z}")
     
     furhat.say(text = model_response, blocking = True)
     history.append({"role": "model", "parts": [model_response]})
