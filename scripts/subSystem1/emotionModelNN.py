@@ -5,11 +5,11 @@ from torch.utils.data import Dataset, DataLoader, random_split
 import torch
 
 """
-This is a machine learning pipeline of a Neural Network predicts emotions based on Arousal, Valence 
+This is a machine learning pipeline of a Neural Network that predicts emotions based on Arousal, Valence 
 and Action Units. 
 
-INPUT: Facial_features_original.csv (Arousal, Valence and Action Units)
-OUTPUT: Neural network with lowest loss, saved in models/emotion_model.pth
+INPUT: facial_features_original.csv (Arousal, Valence and Action Units)
+OUTPUT: Neural network with lowest loss, saved in models/emotion_model_nn.pth
 """
 
 #Neural network class
@@ -162,6 +162,7 @@ def main():
     model.load_state_dict(best_model_wts) 
     torch.save(model.state_dict(), "scripts/subSystem1/models/emotion_model_nn.pth")
 
+    #General model information
     model_info = {
         "model": model,
         "best_weights": best_model_wts,

@@ -7,7 +7,8 @@ furhat = FurhatRemoteAPI("localhost")
 
 
 """
-Gestures made by Furhat during the interaction with the user 
+Gestures made by Furhat during the interaction with the user .
+Documentation: https://docs.furhat.io/remote-api/#furhatgestures 
 """
 
 def deep_breath():
@@ -237,5 +238,3 @@ def surprise():
         "class":"furhatos.gestures.Gesture"
         })   
 
-
-big_smile()

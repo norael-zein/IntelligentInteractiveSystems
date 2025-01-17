@@ -2,8 +2,11 @@ import joblib
 
 def best_model(extractor):
     """
-    Input - Valence, Arousal, Action Units (AUs): AU01,AU02,AU04,AU05,AU06,AU07,AU09,AU10,AU11,AU12,AU14,AU15,AU17,AU20,AU23,AU24,AU25,AU26,AU28,AU43
-    Output - Emotional states: Angry, Disgust, Fear, Happy, Neutral, Sad, Suprise
+    This model facilitates integration between the User Perception subsystem
+    and the Interaction subsystem by analyzing real-time user data to generate emotional states.
+
+    INPUT: Valence, Arousal, Action Units (AUs) from real-time captured frames
+    OUTPUT: Emotional states: Angry, Disgust, Fear, Happy, Neutral, Sad, Suprise
     """
     try:
         action_units = extractor.get_action_units()
