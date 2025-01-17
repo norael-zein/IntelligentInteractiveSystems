@@ -237,3 +237,5 @@ def surprise():
         "class":"furhatos.gestures.Gesture"
         })   
 
+
+big_smile()
